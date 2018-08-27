@@ -1,0 +1,17 @@
+##########################################################
+
+=head2 add_routes
+
+page: /thruk/cgi-bin/hello.cgi
+
+=cut
+
+$routes->{'/thruk/cgi-bin/pansnaps/index.cgi'} = 'Thruk::Controller::pansnaps::index';
+$routes->{'/thruk/cgi-bin/pansnaps/add.cgi'} = 'Thruk::Controller::pansnaps::add';
+$routes->{'/thruk/cgi-bin/pansnaps/remove.cgi'} = 'Thruk::Controller::pansnaps::remove';
+
+# add new menu item
+Thruk::Utils::Menu::insert_item('General', {
+                                'href'  => '/thruk/cgi-bin/pansnaps/index.cgi',
+                                'name'  => 'Pansnaps',
+});

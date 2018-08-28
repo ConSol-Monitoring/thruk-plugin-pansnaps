@@ -10,3 +10,11 @@ $ mkdir -p $OMD_ROOT/var/pansnaps/htdocs
 $ omd reload apache
 $ omd reload crontab
 ```
+
+ImageMagick needs permission to use label:
+
+```
+OMD[pansnaps@centos7-64]:~$ grep -i label /etc/ImageMagick/policy.xml 
+<!-- <policy domain="coder" rights="none" pattern="LABEL" /> -->
+```
+

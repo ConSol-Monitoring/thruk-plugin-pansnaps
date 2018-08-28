@@ -16,13 +16,13 @@ for id in ${ids[@]}; do
   test "$(jobs | wc -l)" -ge 8 && wait || true  # wait if needed
   {
     proc=$$
-    flock "/tmp/dashboard.${dashboard}" $OMD_ROOT/share/thruk/support/panorama2img 1792x1024 omdadmin $id "/tmp/${dashboard}.$proc.png"
+    flock "/tmp/dashboard.${dashboard}" $OMD_ROOT/share/thruk/support/panorama2img 1792x1000 omdadmin $id "/tmp/${dashboard}.$proc.png"
     convert "/tmp/${dashboard}.$proc.png" -trim "/tmp/${dashboard}.$proc.trimmed.png"
     convert "/tmp/${dashboard}.$proc.trimmed.png" -bordercolor White -border 10x10 "/tmp/${dashboard}.$proc.bordered.png"
     convert "/tmp/${dashboard}.$proc.bordered.png" -flatten -colorspace sRGB "jpg:/tmp/${dashboard}.$proc.flattened.png"
     # GRRR
     convert "/tmp/${dashboard}.$proc.flattened.png" \
-        -background Khaki  -pointsize 24 label:" $(date +'%F %H:%M')" \
+        -background Khaki  -pointsize 24 label:" $(date +'%F %H:%M %Z')" \
         +swap -gravity Center -append -quality 95 "/tmp/${dashboard}.$proc.labeled.jpg"
     mv "/tmp/${dashboard}.$proc.labeled.jpg" \
         "$OMD_ROOT/var/pansnaps/htdocs/${dashboard}.jpg"

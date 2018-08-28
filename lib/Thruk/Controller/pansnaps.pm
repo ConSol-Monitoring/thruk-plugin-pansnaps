@@ -73,24 +73,31 @@ $id_template = << 'EOT';
     <img id="frame" src="[% id %].jpg" style="display: block; margin-left: auto; margin-right: auto; width: 100%;">
 
     <script>        
-        // Use an off-screen image to load the next frame.
-        var img = new Image();
+        document.addEventListener("DOMContentLoaded", () => {
+            let reload_interval = 1000;
+            let timeout_interval = 60 * 1000;
 
-        // When it is loaded...
-        img.addEventListener("load", function() {
+            let img = document.getElementById("frame");
+            let timeout_function = () => {
+                alert("Reloading image failed");
+            }
+            let timeout = setTimeout(timeout_function, timeout_interval);
 
-            // Set the on-screen image to the same source. This should be instant because
-            // it is already loaded.
-            document.getElementById("frame").src = img.src;
+            img.addEventListener("load", () => {
+                clearTimeout(timeout)
+                timeout = setTimeout(timeout_function, timeout_interval);
+                //let d = new Date;
+                //document.getElementById("loadtime").innerHTML=d.toLocaleDateString() + " " + d.toLocaleTimeString()
+            });
 
-            // Schedule loading the next frame.
-            setTimeout(function() {
+            let updateImage = () => {
+                let img = document.getElementById("frame");
                 img.src = "[% id %].jpg?" + (new Date).getTime();
-            }, 1000/15); // 15 FPS (more or less)
-        })
+                setTimeout(updateImage, 1000);
+            }
 
-        // Start the loading process.
-        img.src = "[% id %].jpg?" + (new Date).getTime();
+            setTimeout(updateImage, 1000);
+        });
     </script>
     </body>
 </html>

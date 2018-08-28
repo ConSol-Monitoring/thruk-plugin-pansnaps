@@ -14,6 +14,7 @@
             <td>[% d.name | html %]</td>
             <td><input
                 type="checkbox"
+                data-title="[% d.name | html %]"
                 data-id="[% d.nr %]" [% 'checked=checked' IF d.published %]
                 >
             </td>
@@ -23,15 +24,20 @@
 </table>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    let set_dashboard = (id, checked) => {
+    let set_dashboard = (input) => {
         xmlHttp = new XMLHttpRequest();
+        let id = input.getAttribute("data-id");
+        let title = input.getAttribute("data-title");
+        let checked = input.checked;
         let url = "remove.cgi";
         if(checked) {
             url = "add.cgi";
         }
-        xmlHttp.open("POST", url);
-        xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlHttp.send("id=" + id);
+        let formdata = new FormData()
+        formdata.append("id", id);
+        formdata.append("title", title);
+        xmlHttp.open("POST", url, false);
+        xmlHttp.send(formdata);
     };
     let set_url = (input) => {
         let id = input.getAttribute("data-id");
@@ -48,12 +54,9 @@ document.addEventListener("DOMContentLoaded", () => {
     inputs.forEach((input, index) => {
         set_url(input);
         input.addEventListener("change", function() {
-            let checked = this.checked
-            let id = this.getAttribute("data-id")
-            set_dashboard(id, checked)
-            set_url(input);
+            set_dashboard(this)
+            set_url(this);
         });
-
     });
 })
 </script>

@@ -15,19 +15,21 @@ my $id_template;
 sub add {
     my ($c) = @_;
     my $id = $c->req->parameters->{'id'};
+    my $title = $c->req->parameters->{'title'};
     my $pname = Thruk::Utils::get_plugin_name(__FILE__, __PACKAGE__);
     my $ppath = $c->config->{plugin_path};
     my $not_ready = "$ppath/plugins-enabled/$pname/not_ready.jpg";
     my $out = "";
     $t->process(\$id_template, {
         id => $id,
+        title => $title,
     }, \$out) || die $t->error();
     open(my $f, ">", "$html/$id.html") or die($!);
     print $f $out;
     close($f) or die($!);
     system({ "ln" } "ln", "$not_ready", "$html/$id.jpg");
     $c->{rendered} = 1;
-    $c->res->body("");
+    $c->res->body("<ok/>");
 }
 
 sub remove {
@@ -37,7 +39,7 @@ sub remove {
     unlink("$html/$id.png");
     unlink("$html/$id.jpg");
     $c->{rendered} = 1;
-    $c->res->body("");
+    $c->res->body("<ok/>");
 }
 
 sub index {
@@ -62,7 +64,7 @@ $id_template = << 'EOT';
 <html>
     <head>
         <meta charset="utf-8">      
-        <title>Image Refresh</title>
+        <title>[% title %]</title>
     </head>
 
     <body>

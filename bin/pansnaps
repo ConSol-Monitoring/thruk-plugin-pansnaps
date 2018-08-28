@@ -1,5 +1,6 @@
 #! /usr/bin/bash
 
+shopt -s nullglob
 declare -a ids
 test -d $OMD_ROOT/var/pansnaps/htdocs || mkdir -p $OMD_ROOT/var/pansnaps/htdocs
 

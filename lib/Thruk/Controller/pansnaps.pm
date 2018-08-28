@@ -73,7 +73,7 @@ $id_template = << 'EOT';
 
     <script>        
         document.addEventListener("DOMContentLoaded", () => {
-            let reload_interval = 1000;
+            let reload_interval = 10* 1000;
             let timeout_interval = 60 * 1000;
 
             let img = document.getElementById("frame");
@@ -92,10 +92,10 @@ $id_template = << 'EOT';
             let updateImage = () => {
                 let img = document.getElementById("frame");
                 img.src = "[% id %].jpg?" + (new Date).getTime();
-                setTimeout(updateImage, 1000);
+                setTimeout(updateImage, reload_interval);
             }
 
-            setTimeout(updateImage, 1000);
+            setTimeout(updateImage, reload_interval);
         });
     </script>
     </body>

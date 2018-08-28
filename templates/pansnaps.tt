@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let td = document.getElementById("url_" + id)
         if(input.checked) {
             let url = `/[% OMD_SITE %]/api/pansnaps/${id}.html`
-            td.innerHTML = `<a href="${url}">Permanent Link</a>`
+            td.innerHTML = `<a href="${url}">permanent link</a>`
         } else {
             td.innerHTML = ''
         }

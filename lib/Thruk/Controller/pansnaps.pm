@@ -49,13 +49,12 @@ sub index {
     for my $d (@$dashboards) {
        $d->{published} = -e "$html/$d->{nr}.html"
     }
+
+    $dashboards = [ sort { $a->{name} cmp $b->{name} } @$dashboards ];
+
     $c->stash->{OMD_ROOT} = $ENV{OMD_ROOT};
     $c->stash->{OMD_SITE} = $ENV{OMD_SITE};
     $c->stash->{dashboards} = $dashboards;
-    $c->stash->{title}           = 'Pansnaps!';
-    $c->stash->{'subtitle'}              = 'Pansnaps!';
-    $c->stash->{'infoBoxTitle'}          = 'Pansnaps!';
-    $c->stash->{'no_auto_reload'}      = 1;
     $c->stash->{template} = 'pansnaps.tt';
 }
 

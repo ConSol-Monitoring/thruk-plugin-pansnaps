@@ -1,35 +1,37 @@
 #! /usr/bin/bash
 
-declare -A ids
+declare -a ids
 test -d $OMD_ROOT/var/pansnaps/htdocs || mkdir -p $OMD_ROOT/var/pansnaps/htdocs
 
 for html in $OMD_ROOT/var/pansnaps/htdocs/[0-9]*.html
 do
-  html=${html/.html/}
-  html=${html##*/}
-  id=$html
-  #id=$(basename $(ls -t $(grep -l '"title" : "'${html}'"'  etc/thruk/panorama/*.tab | awk -F: '{ print $1 }') | head -1))
-  #id=${id%%.*}
-  echo $html has $id
-  ids[$html]=$id
+  id=${html/.html/}
+  id=${html##*/}
+  id=${id%%.*}
+  ids+=($id)
 done
 
-for dashboard in ${!ids[@]}; do
-  id=${ids[$dashboard]}
+for id in ${ids[@]}; do
+  dashboard=$id
   test "$(jobs | wc -l)" -ge 8 && wait || true  # wait if needed
   {
     proc=$$
-    flock "/tmp/dashboard.${dashboard}" $OMD_ROOT/share/thruk/support/panorama2img 1792x1024 omdadmin $id "/tmp/${dashboard}.png.$proc"
-    convert "/tmp/${dashboard}.png.$proc" -trim "/tmp/${dashboard}.png.$proc.trimmed"
-    convert "/tmp/${dashboard}.png.$proc.trimmed" -bordercolor White -border 10x10 "/tmp/${dashboard}.png.$proc.bordered"
-    convert "/tmp/${dashboard}.png.$proc.bordered" -flatten -quality 95 -colorspace sRGB "jpg:/tmp/${dashboard}.jpg.$proc.bordered"
-    mv "/tmp/${dashboard}.jpg.$proc.bordered" \
+    flock "/tmp/dashboard.${dashboard}" $OMD_ROOT/share/thruk/support/panorama2img 1792x1024 omdadmin $id "/tmp/${dashboard}.$proc.png"
+    convert "/tmp/${dashboard}.$proc.png" -trim "/tmp/${dashboard}.$proc.trimmed.png"
+    convert "/tmp/${dashboard}.$proc.trimmed.png" -bordercolor White -border 10x10 "/tmp/${dashboard}.$proc.bordered.png"
+    convert "/tmp/${dashboard}.$proc.bordered.png" -flatten -colorspace sRGB "jpg:/tmp/${dashboard}.$proc.flattened.png"
+    # GRRR
+    convert "/tmp/${dashboard}.$proc.flattened.png" \
+        -background Khaki  -pointsize 24 label:" $(date +'%F %H:%M')" \
+        +swap -gravity Center -append -quality 95 "/tmp/${dashboard}.$proc.labeled.jpg"
+    mv "/tmp/${dashboard}.$proc.labeled.jpg" \
         "$OMD_ROOT/var/pansnaps/htdocs/${dashboard}.jpg"
-    rm -f "/tmp/${dashboard}.png.${proc}.bordered"
-    rm -f "/tmp/${dashboard}.png.${proc}.trimmed"
-    rm -f "/tmp/${dashboard}.png.${proc}"
+    rm -f "/tmp/${dashboard}.${proc}.labled.png"
+    rm -f "/tmp/${dashboard}.${proc}.flattened.png"
+    rm -f "/tmp/${dashboard}.${proc}.bordered.png"
+    rm -f "/tmp/${dashboard}.${proc}.trimmed.png"
+    rm -f "/tmp/${dashboard}.${proc}.png"
   } &
 done
-
 
 wait

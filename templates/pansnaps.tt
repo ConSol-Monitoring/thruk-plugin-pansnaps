@@ -24,33 +24,33 @@
 </table>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    let set_dashboard = (input) => {
+    const set_dashboard = (input) => {
         xmlHttp = new XMLHttpRequest();
-        let id = input.getAttribute("data-id");
-        let title = input.getAttribute("data-title");
-        let checked = input.checked;
+        const id = input.getAttribute("data-id");
+        const title = input.getAttribute("data-title");
+        const checked = input.checked;
         let url = "remove.cgi";
         if(checked) {
             url = "add.cgi";
         }
-        let formdata = new FormData()
+        const formdata = new FormData()
         formdata.append("id", id);
         formdata.append("title", title);
         xmlHttp.open("POST", url, false);
         xmlHttp.send(formdata);
     };
-    let set_url = (input) => {
-        let id = input.getAttribute("data-id");
-        let td = document.getElementById("url_" + id)
+    const set_url = (input) => {
+        const id = input.getAttribute("data-id");
+        const td = document.getElementById("url_" + id)
         if(input.checked) {
-            let url = `/[% OMD_SITE %]/api/pansnaps/${id}.html`
-            td.innerHTML = `<a href="${url}">permanent link</a>`
+            const url = `/[% OMD_SITE %]/api/pansnaps/${id}.html`
+            td.innerHTML = `<a target=blank href="${url}">permanent link</a>`
         } else {
             td.innerHTML = ''
         }
     }
 
-    let inputs = document.querySelectorAll('input[type="checkbox"]')
+    const inputs = document.querySelectorAll('input[type="checkbox"]')
     inputs.forEach((input, index) => {
         set_url(input);
         input.addEventListener("change", function() {

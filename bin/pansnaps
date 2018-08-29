@@ -18,19 +18,20 @@ for id in ${ids[@]}; do
   {
     proc=$$
     flock "/tmp/dashboard.${dashboard}" $OMD_ROOT/share/thruk/support/panorama2img 1792x1000 omdadmin $id "/tmp/${dashboard}.$proc.png"
-    convert "/tmp/${dashboard}.$proc.png" -trim "/tmp/${dashboard}.$proc.trimmed.png"
-    convert "/tmp/${dashboard}.$proc.trimmed.png" -bordercolor White -border 10x10 "/tmp/${dashboard}.$proc.bordered.png"
-    convert "/tmp/${dashboard}.$proc.bordered.png" -flatten -colorspace sRGB "jpg:/tmp/${dashboard}.$proc.flattened.png"
+    mogrify "/tmp/${dashboard}.$proc.png" -bordercolor White -border 10x10
+    mogrify "/tmp/${dashboard}.$proc.png" -flatten -colorspace sRGB
+    mogrify "/tmp/${dashboard}.$proc.png" -trim
     # GRRR
-    convert "/tmp/${dashboard}.$proc.flattened.png" \
+    convert "/tmp/${dashboard}.$proc.png" \
         -background Khaki  -pointsize 24 label:" $(date +'%F %H:%M %Z')" \
-        +swap -gravity Center -append -quality 95 "/tmp/${dashboard}.$proc.labeled.jpg"
+        +swap -gravity Center -append -quality 90 "/tmp/${dashboard}.$proc.labeled.jpg"
+#    convert "/tmp/${dashboard}.$proc.png" -quality 90 /tmp/${dashboard}.$proc.labeled.jpg
     mv "/tmp/${dashboard}.$proc.labeled.jpg" \
         "$OMD_ROOT/var/pansnaps/htdocs/${dashboard}.jpg"
     rm -f "/tmp/${dashboard}.${proc}.labled.png"
-    rm -f "/tmp/${dashboard}.${proc}.flattened.png"
-    rm -f "/tmp/${dashboard}.${proc}.bordered.png"
-    rm -f "/tmp/${dashboard}.${proc}.trimmed.png"
+    rm -f "/tmp/${dashboard}.${proc}.png"
+    #rm -f "/tmp/${dashboard}.${proc}.bordered.png"
+    #rm -f "/tmp/${dashboard}.${proc}.trimmed.png"
     rm -f "/tmp/${dashboard}.${proc}.png"
   } &
 done

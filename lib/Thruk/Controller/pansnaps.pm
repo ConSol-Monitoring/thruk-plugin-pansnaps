@@ -68,16 +68,15 @@ $id_template = << 'EOT';
         <meta charset="utf-8">      
         <title>[% title %]</title>
     <style>
-.container {
-    position: relative;
-    text-align: center;
-    color: white;
-}
-.top-right {
-    position: absolute;
-    top: 8px;
-    right: 16px;
-}
+        .container {
+            position: relative;
+            text-align: center;
+        }
+        .top-right {
+            position: absolute;
+            top: 8px;
+            right: 16px;
+        }
     </style>
     </head>
 

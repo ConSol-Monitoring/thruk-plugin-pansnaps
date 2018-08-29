@@ -27,7 +27,7 @@ sub add {
     open(my $f, ">", "$html/$id.html") or die($!);
     print $f $out;
     close($f) or die($!);
-    system({ "ln" } "ln", "$not_ready", "$html/$id.jpg");
+    system({ "/bin/cp" } "/bin/cp", "$not_ready", "$html/$id.jpg");
     $c->{rendered} = 1;
     $c->res->body("<ok/>");
 }

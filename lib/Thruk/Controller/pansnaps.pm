@@ -45,7 +45,10 @@ sub remove {
 sub index {
     my ( $c ) = @_;
 
-    my $dashboards = Thruk::Utils::Panorama::get_dashboard_list($c, 'my');
+    my $dashboards = [
+        @{ Thruk::Utils::Panorama::get_dashboard_list($c, 'my') // [] },
+        @{ Thruk::Utils::Panorama::get_dashboard_list($c, 'public') // [] },
+    ];
     for my $d (@$dashboards) {
        $d->{published} = -e "$html/$d->{nr}.html"
     }
@@ -64,33 +67,58 @@ $id_template = << 'EOT';
     <head>
         <meta charset="utf-8">      
         <title>[% title %]</title>
+    <style>
+.container {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+.top-right {
+    position: absolute;
+    top: 8px;
+    right: 16px;
+}
+    </style>
     </head>
 
     <body>
 
     <!-- Get the initial image. -->
+    <div class="container">
     <img id="frame" src="[% id %].jpg" style="display: block; margin-left: auto; margin-right: auto; width: 100%;">
+    <span class="top-right" id="showtime"></span>
+    </div>
 
     <script>        
         document.addEventListener("DOMContentLoaded", () => {
-            let reload_interval = 10* 1000;
-            let timeout_interval = 60 * 1000;
+            const reload_interval = 10* 1000;
+            const timeout_interval = 60 * 1000;
 
-            let img = document.getElementById("frame");
-            let timeout_function = () => {
+            const img = document.getElementById("frame");
+            const timeout_function = () => {
                 alert("Reloading image failed");
             }
             let timeout = setTimeout(timeout_function, timeout_interval);
+            
+            const showtime = document.getElementById("showtime")
+            const updateTime = () => {
+                const date = new Date
+                const year = date.getUTCFullYear().toString();
+                const month = (date.getUTCMonth() + 1).toString().padStart(2,'0')
+                const day  = date.getUTCDate().toString().padStart(2,'0');
+                const hour = date.getUTCHours().toString().padStart(2,'0');
+                const min  = date.getUTCMinutes().toString().padStart(2,'0');
+                showtime.innerHTML = `${year}-${month}-${day} ${hour}:${min} UTC`
+                setTimeout(updateTime, 1000);
+            }
+            setTimeout(updateTime, 1000);
 
             img.addEventListener("load", () => {
                 clearTimeout(timeout)
                 timeout = setTimeout(timeout_function, timeout_interval);
-                //let d = new Date;
-                //document.getElementById("loadtime").innerHTML=d.toLocaleDateString() + " " + d.toLocaleTimeString()
             });
 
-            let updateImage = () => {
-                let img = document.getElementById("frame");
+            const updateImage = () => {
                 img.src = "[% id %].jpg?" + (new Date).getTime();
                 setTimeout(updateImage, reload_interval);
             }

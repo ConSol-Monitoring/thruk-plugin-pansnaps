@@ -74,7 +74,7 @@ $id_template = << 'EOT';
         }
         .top-right {
             position: absolute;
-            top: 8px;
+            top: 3px;
             right: 16px;
         }
     </style>

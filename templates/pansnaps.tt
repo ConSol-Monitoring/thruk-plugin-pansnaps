@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <link rel="stylesheet" href="[% url_prefix %]plugins/pansnaps/marx.min.css">
 <link rel="stylesheet" href="[% url_prefix %]plugins/pansnaps/pansnaps.css">
 <table>

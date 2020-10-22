@@ -3,4 +3,3 @@ This plugin requires an OMD enviroment.
 Read more about this plugin on https://github.com/ConSol/thruk-plugin-pansnaps
 
 Url: pansnaps/index.cgi
-Version: 1.0.0

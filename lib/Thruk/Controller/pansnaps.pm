@@ -3,8 +3,8 @@ require Thruk::Utils::Panorama;
 require Thruk::Utils;
 require Template;
 
-use strict;
 use warnings;
+use strict;
 
 my $tabs = "$ENV{OMD_ROOT}/etc/thruk/panorama";
 my $html = "$ENV{OMD_ROOT}/var/pansnaps/htdocs";
@@ -30,6 +30,7 @@ sub add {
     system({ "/bin/cp" } "/bin/cp", "$not_ready", "$html/$id.jpg");
     $c->{rendered} = 1;
     $c->res->body("<ok/>");
+    return;
 }
 
 sub remove {
@@ -40,6 +41,7 @@ sub remove {
     unlink("$html/$id.jpg");
     $c->{rendered} = 1;
     $c->res->body("<ok/>");
+    return;
 }
 
 sub index {
@@ -49,23 +51,24 @@ sub index {
         @{ Thruk::Utils::Panorama::get_dashboard_list($c, 'my') // [] },
         @{ Thruk::Utils::Panorama::get_dashboard_list($c, 'public') // [] },
     ];
-    for my $d (@$dashboards) {
+    for my $d (@{$dashboards}) {
        $d->{published} = -e "$html/$d->{nr}.html"
     }
 
-    $dashboards = [ sort { $a->{name} cmp $b->{name} } @$dashboards ];
+    $dashboards = [ sort { $a->{name} cmp $b->{name} } @{$dashboards} ];
 
     $c->stash->{OMD_ROOT} = $ENV{OMD_ROOT};
     $c->stash->{OMD_SITE} = $ENV{OMD_SITE};
     $c->stash->{dashboards} = $dashboards;
     $c->stash->{template} = 'pansnaps.tt';
+    return;
 }
 
 $id_template = << 'EOT';
 <!doctype html>
 <html>
     <head>
-        <meta charset="utf-8">      
+        <meta charset="utf-8">
         <title>[% title %]</title>
     <style>
         .container {
@@ -88,7 +91,7 @@ $id_template = << 'EOT';
     <span class="top-right" id="showtime"></span>
     </div>
 
-    <script>        
+    <script>
         document.addEventListener("DOMContentLoaded", () => {
             const reload_interval = 10* 1000;
             const timeout_interval = 60 * 1000;
@@ -98,7 +101,7 @@ $id_template = << 'EOT';
                 alert("Reloading image failed");
             }
             let timeout = setTimeout(timeout_function, timeout_interval);
-            
+
             const showtime = document.getElementById("showtime")
             const updateTime = () => {
                 const date = new Date

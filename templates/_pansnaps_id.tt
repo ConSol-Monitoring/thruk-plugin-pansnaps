@@ -1,0 +1,54 @@
+﻿<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>[% title %]</title>
+    </head>
+
+    <body>
+
+    <!-- Get the initial image. -->
+    <div class="relative text-center">
+    <img id="frame" src="[% id %].jpg" style="display: block; margin-left: auto; margin-right: auto; width: 100%;">
+    <span class="absolute" style="top: 3px; right: 16px;" id="showtime"></span>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const reload_interval = 10* 1000;
+            const timeout_interval = 60 * 1000;
+
+            const img = document.getElementById("frame");
+            const timeout_function = () => {
+                alert("Reloading image failed");
+            }
+            let timeout = setTimeout(timeout_function, timeout_interval);
+
+            const showtime = document.getElementById("showtime")
+            const updateTime = () => {
+                const date = new Date
+                const year = date.getUTCFullYear().toString();
+                const month = (date.getUTCMonth() + 1).toString().padStart(2,'0')
+                const day  = date.getUTCDate().toString().padStart(2,'0');
+                const hour = date.getUTCHours().toString().padStart(2,'0');
+                const min  = date.getUTCMinutes().toString().padStart(2,'0');
+                showtime.innerHTML = `${year}-${month}-${day} ${hour}:${min} UTC`
+                setTimeout(updateTime, 1000);
+            }
+            setTimeout(updateTime, 1000);
+
+            img.addEventListener("load", () => {
+                clearTimeout(timeout)
+                timeout = setTimeout(timeout_function, timeout_interval);
+            });
+
+            const updateImage = () => {
+                img.src = "[% id %].jpg?" + (new Date).getTime();
+                setTimeout(updateImage, reload_interval);
+            }
+
+            setTimeout(updateImage, reload_interval);
+        });
+    </script>
+    </body>
+</html>

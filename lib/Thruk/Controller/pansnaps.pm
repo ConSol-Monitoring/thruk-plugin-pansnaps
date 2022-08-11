@@ -56,10 +56,11 @@ sub index {
 
     $dashboards = [ sort { $a->{name} cmp $b->{name} } @{$dashboards} ];
 
-    $c->stash->{OMD_ROOT} = $ENV{OMD_ROOT};
-    $c->stash->{OMD_SITE} = $ENV{OMD_SITE};
-    $c->stash->{dashboards} = $dashboards;
-    $c->stash->{template} = 'pansnaps.tt';
+    $c->stash->{OMD_ROOT}      = $ENV{OMD_ROOT};
+    $c->stash->{OMD_SITE}      = $ENV{OMD_SITE};
+    $c->stash->{dashboards}    = $dashboards;
+    $c->stash->{template}      = 'pansnaps.tt';
+    $c->stash->{'plugin_name'} = Thruk::Utils::get_plugin_name(__FILE__, __PACKAGE__);
     return;
 }
 

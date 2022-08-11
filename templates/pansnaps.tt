@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
-<link rel="stylesheet" href="[% url_prefix %]plugins/pansnaps/marx.min.css">
-<link rel="stylesheet" href="[% url_prefix %]plugins/pansnaps/pansnaps.css">
+<link rel="stylesheet" href="[% url_prefix %]plugins/[% plugin_name %]/marx.min.css">
+<link rel="stylesheet" href="[% url_prefix %]plugins/[% plugin_name %]/pansnaps.css">
 <table>
     <tr>
     <th>ID</th>

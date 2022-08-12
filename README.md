@@ -1,5 +1,7 @@
 # pansnaps
 
+![Thruk Pansnaps Plugin](preview.png "Thruk Pansnaps Plugin")
+
 ```
 $ git clone ... $OMD_ROOT/etc/thruk/plugins-available/pansnaps
 $ ln -s ../plugins-available/pansnaps $OMD_ROOT/etc/thruk/plugins-enabled/pansnaps

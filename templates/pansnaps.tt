@@ -10,7 +10,7 @@
     </tr>
     [% FOREACH d IN dashboards %]
         <tr>
-            <td><a target=_blank href="../panorama.cgi?map=[% d.nr | html %]">[% d.nr | html %]</a></td>
+            <td><a target=_blank href="../panorama.cgi?map=[% d.nr | uri %]">[% d.nr | html %]</a></td>
             <td>[% d.name | html %]</td>
             <td><input
                 type="checkbox"

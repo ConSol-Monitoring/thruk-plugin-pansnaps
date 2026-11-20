@@ -8,6 +8,7 @@ use warnings;
 use strict;
 
 use Thruk::Utils::IO ();
+use Thruk::Utils::Log ();
 
 my $tabs = "$ENV{OMD_ROOT}/etc/thruk/panorama";
 my $html = "$ENV{OMD_ROOT}/var/pansnaps/htdocs";
@@ -18,7 +19,12 @@ sub add {
     my $id = $c->req->parameters->{'id'};
     my $title = $c->req->parameters->{'title'};
     $title = '' unless defined $title;
-    $id = '' unless $id && !Thruk::Base::check_for_nasty_filename($id);
+    if(Thruk::Base::check_for_nasty_filename($id)) {
+        Thruk::Utils::Log::_error("pansnaps: invalid id rejected");
+        $c->{rendered} = 1;
+        $c->res->body("<error>invalid id</error>");
+        return;
+    }
     my $pname = Thruk::Utils::get_plugin_name(__FILE__, __PACKAGE__);
     my $ppath = $c->config->{plugin_path};
     my $t = Template->new({ INCLUDE_PATH => "$ppath/plugins-enabled/$pname/templates" });
@@ -38,7 +44,12 @@ sub add {
 sub remove {
     my ($c) = @_;
     my $id = $c->req->parameters->{'id'};
-    $id = '' unless $id && !Thruk::Base::check_for_nasty_filename($id);
+    if(Thruk::Base::check_for_nasty_filename($id)) {
+        Thruk::Utils::Log::_error("pansnaps: invalid id rejected");
+        $c->{rendered} = 1;
+        $c->res->body("<error>invalid id</error>");
+        return;
+    }
     unlink("$html/$id.html");
     unlink("$html/$id.png");
     unlink("$html/$id.jpg");

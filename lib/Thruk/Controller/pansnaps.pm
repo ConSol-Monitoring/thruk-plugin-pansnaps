@@ -18,20 +18,14 @@ sub add {
     my $id = $c->req->parameters->{'id'};
     my $title = $c->req->parameters->{'title'};
     $title = '' unless defined $title;
-    if(defined $id && Thruk::Base::check_for_nasty_filename($id)) {
-        Thruk::Utils::Log::_error("pansnaps: invalid id rejected");
-        $c->{rendered} = 1;
-        $c->res->body("<error>invalid id</error>");
-        return;
-    }
-    $id = '' unless defined $id;
+    $id = '' unless $id && !Thruk::Base::check_for_nasty_filename($id);
     my $pname = Thruk::Utils::get_plugin_name(__FILE__, __PACKAGE__);
     my $ppath = $c->config->{plugin_path};
     my $t = Template->new({ INCLUDE_PATH => "$ppath/plugins-enabled/$pname/templates" });
     my $not_ready = "$ppath/plugins-enabled/$pname/not_ready.jpg";
     my $out = "";
     $t->process("_pansnaps_id.tt", {
-        id => $id,
+        image => $id.'.jpg',
         title => $title,
     }, \$out) || die $t->error();
     Thruk::Utils::IO::write("$html/$id.html", $out);
@@ -44,13 +38,7 @@ sub add {
 sub remove {
     my ($c) = @_;
     my $id = $c->req->parameters->{'id'};
-    if(defined $id && Thruk::Base::check_for_nasty_filename($id)) {
-        Thruk::Utils::Log::_error("pansnaps: invalid id rejected");
-        $c->{rendered} = 1;
-        $c->res->body("<error>invalid id</error>");
-        return;
-    }
-    $id = '' unless defined $id;
+    $id = '' unless $id && !Thruk::Base::check_for_nasty_filename($id);
     unlink("$html/$id.html");
     unlink("$html/$id.png");
     unlink("$html/$id.jpg");

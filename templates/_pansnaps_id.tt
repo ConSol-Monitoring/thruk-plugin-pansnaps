@@ -9,7 +9,7 @@
 
     <!-- Get the initial image. -->
     <div class="relative text-center">
-    <img id="frame" src="[% id | html %].jpg" style="display: block; margin-left: auto; margin-right: auto; width: 100%;">
+    <img id="frame" src="[% image | html %]" style="display: block; margin-left: auto; margin-right: auto; width: 100%;">
     <span class="absolute" style="top: 3px; right: 16px;" id="showtime"></span>
     </div>
 
@@ -43,7 +43,7 @@
             });
 
             const updateImage = () => {
-                img.src = "[% id | html %].jpg?" + (new Date).getTime();
+                img.src = "[% image | html %]?" + (new Date).getTime();
                 setTimeout(updateImage, reload_interval);
             }
 
